@@ -17,7 +17,6 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState('')
   const router = useRouter()
   const keyword = router.query.keyword;
- 
 
   const defaultFilters = {
     sortBy: 'popular',
@@ -42,6 +41,7 @@ export default function Home() {
           : undefined,
     }
   )
+
   return (
     <>
       <Head>
@@ -66,7 +66,7 @@ export default function Home() {
       {data && (
         <InfiniteScroll
           style={{ overflow: 'hidden' }}
-          className="p-4 bg-[#112136] pt-24"
+          className="p-4 bg-[#112136] pt-24  min-h-screen"
           dataLength={data.pages.length * 20}
           next={fetchNextPage}
           hasMore={Boolean(hasNextPage)}
@@ -76,7 +76,14 @@ export default function Home() {
             </div>
           }
         >
-            <p className='text-white mb-3'>Hasil pencarian dari {keyword}</p>
+          {data.pages.map((group)=> {
+            if(group.hits.length == 0){
+              return <p className='text-white mb-3'> Hasil pencarian dari {keyword} ngga ada</p>
+            }else{
+              return <p className='text-white mb-3'> Hasil pencarian dari {keyword}</p>
+            }
+          })}
+            
           <Masonry
             breakpointCols={{ default: 4, 1440: 3, 1024: 2, 768: 1 }}
             className="my-masonry-grid "
