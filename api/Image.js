@@ -8,7 +8,6 @@ import axios from "axios";
     }
 
     export const getImageDetail =  async (id) => {
-      console.log(id)
         const response = await axios.get(
           `https://pixabay.com/api/?key=31155458-5d22b11815ebc66f63eccec0d&id=${id}`
         )

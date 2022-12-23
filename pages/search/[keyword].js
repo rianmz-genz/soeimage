@@ -41,7 +41,7 @@ export default function Home() {
           : undefined,
     }
   )
-
+  console.log(data)
   return (
     <>
       <Head>
@@ -78,9 +78,9 @@ export default function Home() {
         >
           {data.pages.map((group)=> {
             if(group.hits.length == 0){
-              return <p className='text-white mb-3'> Hasil pencarian dari {keyword} ngga ada</p>
+              return <p className='text-white mb-3' key={group.totalHits} > Hasil pencarian dari {keyword} ngga ada</p>
             }else{
-              return <p className='text-white mb-3'> Hasil pencarian dari {keyword}</p>
+              return <p className='text-white mb-3' key={group.totalHits}> Hasil pencarian dari {keyword}</p>
             }
           })}
             
