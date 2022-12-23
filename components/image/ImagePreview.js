@@ -2,6 +2,9 @@ import { useRouter } from "next/router"
 import Image from 'next/image'
 import UserPhotoProfile from "./UserPhotoProfile"
 import { VscEye } from "react-icons/vsc";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { useState } from "react";
 const ImagePreview = ({
     src,
     blurSrc,
@@ -17,7 +20,7 @@ const ImagePreview = ({
     const fixHeight = `${heightPerWidth * 100}%`
   return (
     <li
-            className="w-full h-fit relative inline-block group cursor-zoom-in mb-4"
+            className="w-full h-fit  rounded-lg relative inline-block group cursor-zoom-in mb-4"
             onClick={(e)=> router.push(`/detail/${id}`)}
         >
             <Image

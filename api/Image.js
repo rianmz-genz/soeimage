@@ -14,4 +14,9 @@ import axios from "axios";
         )
         return response.data.hits[0]
       }
-    
+    export const getSearchImage = async (keyword, filters, page) => {
+      const response = await axios.get(
+        `https://pixabay.com/api/?key=27699215-ecac0a076f968a0144f33abee&page=${page}&q=${keyword}&safesearch=true&order=${filters?.sortBy}&orientation=${filters?.orientation}&image_type=${filters?.imageType}&category=${filters?.category}&min_width=${filters?.minimumWidth}&min_height=${filters?.minimumHeight}&colors=${filters?.colors}`
+      )
+      return response.data
+    }

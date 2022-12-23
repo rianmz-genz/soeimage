@@ -1,26 +1,43 @@
 import Head from 'next/head'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useRouter } from 'next/router'
-import { getHomePageImages } from '../api/Image'
-import ImagePreview from '../components/image/ImagePreview'
+import { useRouter,useEffect } from 'next/router'
+import { getSearchImage } from '../../api/Image'
+import ImagePreview from '../../components/image/ImagePreview'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { BiLoaderAlt } from 'react-icons/bi'
 import { useState } from 'react'
 import Masonry from 'react-masonry-css'
-import Banner from '../components/banner/banner'
-import BannerCaption from '../components/banner/bannercaption'
-import BannerSearchInput from '../components/input/BannerSearchInput'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import Banner from '../../components/banner/banner'
+import BannerCaption from '../../components/banner/bannercaption'
+import BannerSearchInput from '../../components/input/BannerSearchInput'
+import Header from '../../components/header/Header'
+import HeaderSearchInput from '../../components/input/HeaderSearchInput'
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState('')
   const router = useRouter()
+  const keyword = router.query.keyword;
+ 
+
+  const defaultFilters = {
+    sortBy: 'popular',
+    orientation: '',
+    imageType: 'all',
+    category: '',
+    minimumWidth: '0',
+    minimumHeight: '0',
+    colors: '',
+  }
+  const [filters, setFilters] = useState(defaultFilters)
+  const [minimumWidth, setMinimumWidth] = useState('0')
+  const [minimumHeight, setMinimumHeight] = useState('0')
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ['Home'],
-    ({pageParam = 1})=>  getHomePageImages(pageParam),
+    ['SearchImage', keyword, filters],
+    ({ pageParam = 1 }) =>
+      getSearchImage(keyword ?? '', filters, pageParam),
     {
-      getNextPageParam: (LastPage, allPages) =>
-        allPages.length < Math.ceil(LastPage.totalHits / 20)
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length < Math.ceil(lastPage.totalHits / 20)
           ? allPages.length + 1
           : undefined,
     }
@@ -28,32 +45,28 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SoeImage</title>
+        <title>Mencari {keyword}</title>
         <meta name="description" content="Dibuat oleh Adrian menggunakan nextjs." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="shortcut icon" href="/images/soeimageicon.png" />
       </Head>
-      <Banner>
-        <BannerCaption
-          title="SoeFinder"
-          description="Cari dan Download Foto, ilustrasi and vector dari pixabay api"
-        />
-        <BannerSearchInput
-          value={searchValue}
-          onChange={(e) =>
-            setSearchValue(e.target.value.trimStart().replace(/ +(?= )/g, ''))
-          }
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              router.push(`/search/${searchValue.trim()}`)
-            }
-          }}
-        />
-      </Banner>
+      <Header>
+            <HeaderSearchInput
+              value={searchValue}
+              onChange={(e) =>
+                setSearchValue(e.target.value.trimStart().replace(/ +(?= )/g, ''))
+              }
+              onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                  router.push(`/search/${searchValue.trim()}`)
+                }                       
+              }}
+            />
+          </Header>
       {data && (
         <InfiniteScroll
           style={{ overflow: 'hidden' }}
-          className="p-4 bg-[#112136]"
+          className="p-4 bg-[#112136] pt-24"
           dataLength={data.pages.length * 20}
           next={fetchNextPage}
           hasMore={Boolean(hasNextPage)}
@@ -63,6 +76,7 @@ export default function Home() {
             </div>
           }
         >
+            <p className='text-white mb-3'>Hasil pencarian dari {keyword}</p>
           <Masonry
             breakpointCols={{ default: 4, 1440: 3, 1024: 2, 768: 1 }}
             className="my-masonry-grid "

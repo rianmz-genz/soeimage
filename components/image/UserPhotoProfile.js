@@ -11,7 +11,7 @@ const UserPhotoProfile = ({
         <div
           className={`flex justify-center items-center w-9 h-9 rounded-full text-xl ${
             variant === 'light'
-              ? 'bg-white text-gray-700'
+              ? 'bg-white text-white'
               : 'bg-gray-700 text-white'
           }`}
         >
@@ -29,7 +29,7 @@ const UserPhotoProfile = ({
       )}
       <p
         className={`${
-          variant === 'light' ? 'text-white' : 'text-gray-600'
+          variant === 'light' ? 'text-white' : 'text-white'
         } text-base font-semibold`}
       >
         {userName}
